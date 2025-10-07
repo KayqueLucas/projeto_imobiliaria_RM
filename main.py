@@ -2,7 +2,7 @@ from classes_imoveis import Apartamento, Casa, Estudio, Orcamento
 
 
 def main():
-    print("🏠 Bem-vindo ao sistema da Imobiliária R.M")
+    print("\n🏠 Bem-vindo ao sistema da Imobiliária R.M")
     print("Escolha o tipo de imóvel:")
     print("1 - Apartamento")
     print("2 - Casa")
@@ -18,13 +18,29 @@ def main():
 
     try:
         if escolha == 1:
-            quartos = int(input("Número de quartos (1 ou 2): "))
+            while True:
+                try:
+                    quartos = int(input("Número de quartos (1 ou 2): "))
+                    if quartos in [1, 2]:
+                        break
+                    else:
+                        print("❌ Opção inválida! Digite 1 ou 2.")
+                except ValueError:
+                    print("❌ Entrada inválida! Digite apenas números.")
             garagem = input("Deseja garagem? (s/n): ").lower() == "s"
             criancas = input("Possui crianças? (s/n): ").lower() == "s"
             imovel = Apartamento(quartos=quartos, garagem=garagem, possui_criancas=criancas)
 
         elif escolha == 2:
-            quartos = int(input("Número de quartos (1 ou 2): "))
+            while True:
+                try:
+                    quartos = int(input("Número de quartos (1 ou 2): "))
+                    if quartos in [1, 2]:
+                        break
+                    else:
+                        print("❌ Opção inválida! Digite 1 ou 2.")
+                except ValueError:
+                    print("❌ Entrada inválida! Digite apenas números.")
             garagem = input("Deseja garagem? (s/n): ").lower() == "s"
             imovel = Casa(quartos=quartos, garagem=garagem)
 
@@ -32,19 +48,14 @@ def main():
             vagas = int(input("Deseja pacote de 2 vagas? (0=Não, 2=Sim): "))
             extras = int(input("Quantas vagas extras (0 se nenhuma): "))
             imovel = Estudio(vagas=vagas, vagas_extras=extras)
-
         else:
             print("❌ Opção inválida!")
             return
 
-    except ValueError:
-        print("❌ Entrada inválida! Digite apenas números quando solicitado.")
-        return
     except Exception as e:
         print(f"Erro ao criar imóvel: {e}")
         return
 
-    # 🚨 Garantia: só segue se o imóvel existir
     if imovel is None:
         print("❌ Não foi possível criar o imóvel.")
         return
@@ -52,6 +63,10 @@ def main():
     try:
         orcamento = Orcamento(imovel)
         resumo = orcamento.gerar_resumo()
+
+        if resumo["Valor mensal"] == 0:
+            print("❌ Não foi possível calcular o orçamento.")
+            return
 
         print("\n📊 Orçamento Gerado:")
         print(f"Tipo de Imóvel: {resumo['Imóvel']}")
@@ -67,7 +82,13 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(f"Erro inesperado: {e}")
+    while True:
+        try:
+            main()
+        except Exception as e:
+            print(f"Erro inesperado: {e}")
+
+        novo_orcamento = input("\nDeseja fazer um novo orçamento? (s/n): ").lower()
+        if novo_orcamento != 's':
+            print("👋 Obrigado por usar o sistema da Imobiliária R.M!")
+            break
